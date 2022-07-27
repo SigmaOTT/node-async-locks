@@ -361,5 +361,23 @@ describe('Async Wrapper', function () {
             }, 1, 'a');
 
         });
+
+        it('releaseQueue should work find', async function () {
+            const promises = []
+            
+            for (let i = 0; i < 100; i++) {
+                promises.push(asyncWrapper.lockPromise('A', async function () {
+                    await sleep(1000)
+                    asyncWrapper.Promise.resolve('ok');
+                    asyncWrapper.releaseQueue('A')
+                }).then(function () {
+                }))
+            }
+            await Promise.all(promises)
+        });
     });
 });
+
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+  }
